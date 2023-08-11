@@ -17,6 +17,7 @@ valuesFilePath: values.yml
 {{ $buildInfoResName := print $templateId "_build_info" }}
 {{ $cronResName := print $templateId "_cron" }}
 {{ $pipelineName := print $templateId "_build" }}
+{{ $rootDirectory := ternary (print "/" .Values.configurations.sourceDirectory) "" (not (eq "" .Values.configurations.sourceDirectory)) }}
 
 # Git repo resource
 {{ define "res.gitRepo.config" }}
