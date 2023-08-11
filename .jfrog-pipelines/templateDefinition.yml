@@ -263,7 +263,6 @@ pipelines:
             - end_step success
           onFailure:
             {{ template "step.shared.failure" $templateParams }}
-
       - name: code_analysis
         type: {{ $stepType }}
         configuration:
@@ -279,7 +278,6 @@ pipelines:
             {{ template "step.codeAnalysis.onExecute" $templateParams }}
           onFailure:
             {{ template "step.shared.failure" $templateParams }}
-
       - name: lint
         type: {{ $stepType }}
         configuration:
@@ -295,7 +293,6 @@ pipelines:
             {{ template "step.lint.onExecute" $templateParams }}
           onFailure:
             {{ template "step.shared.failure" $templateParams }}
-
       - name: go_build
         type: {{ $stepType }}
         configuration:
@@ -312,7 +309,6 @@ pipelines:
             {{ template "step.build.onExecute" $templateParams }}
           onFailure:
             {{ template "step.shared.failure" $templateParams }}
-
       - name: xray_scan
         type: {{ $stepType }}
         configuration:
@@ -325,7 +321,6 @@ pipelines:
             {{ template "step.scan.onExecute" $templateParams }}
           onFailure:
             {{ template "step.shared.failure" $templateParams }}
-
       - name: automation_test
         type: {{ $stepType }}
         configuration:
@@ -340,7 +335,6 @@ pipelines:
             {{ template "step.automation.onExecute" $templateParams }}
           onFailure:
             {{ template "step.shared.failure" $templateParams}}
-
       - name: go_publish
         type: {{ $stepType }}
         configuration:
