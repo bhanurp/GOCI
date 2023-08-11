@@ -11,7 +11,7 @@ valuesFilePath: values.yml
 {{ $templateId := .Values.metadata.templateId }}
 {{ $os := default "linux" .Values.metadata.os }}
 {{ $stepType := ternary "PowerShell" "Bash" (eq $os "windows") }}
-{{ $gitResName := print $templateId "_git_source" }}
+{{ $gitResName := print $templateId"_git_source" }}
 {{ $codeAnalysisResourceName := print $templateId "_code_quality_result" }}
 {{ $buildInfoResultResName := print $templateId "_build_result" }}
 {{ $buildInfoResName := print $templateId "_build_info" }}
@@ -163,7 +163,7 @@ resources:
     configuration:
       {{ template "res.gitRepo.config" . }}
     
-  - name: {{ $codeAnalysisResName }}
+  - name: {{ $codeAnalysisResourceName }}
     type: PropertyBag
     configuration:
       timestamp: ''
