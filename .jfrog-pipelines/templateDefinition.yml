@@ -44,7 +44,7 @@ valuesFilePath: values.yml
 # These are resolved using 'template' thus indentation is important
 # -----------------------------------------------------------------
 {{ $resultResources := dict "$codeAnalysisResourceName" $codeAnalysisResourceName "buildInfoResultResName" $buildInfoResultResName }}
-{{ $templateParams := merge $resultResources (dict "values" .Values "gitResName" $gitResName "rootDirectory" $rootDirectory "buildTool" $buildTool "stepType" $stepType) }}
+{{ $templateParams := merge $resultResources (dict "values" .Values "gitResName" $gitResName "rootDirectory" $rootDirectory "stepType" $stepType) }}
 
 # Git repo resource
 {{ define "res.gitRepo.config" }}
@@ -71,7 +71,6 @@ valuesFilePath: values.yml
 # Steps shared template
 {{ define "step.shared.onExecute.command" }}
   {{ $ := . }}
-  {{ $default := ternary $.defaultGradle $.defaultMvn (eq $.buildTool "gradle") }}
     {{ if $.conf }}
     {{- range $cmd := $.conf.commands }}
     - {{ $cmd }}
