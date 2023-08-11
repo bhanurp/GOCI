@@ -66,13 +66,14 @@ valuesFilePath: values.yml
 {{ end }}
 
 # Update current timestamp in result resource
+{{ define "step.shared.utility.timestamp" }}
   {{ if eq $.stepType "linux" }}
-- STEP_TIMESTAMP=$(date +%s)
+  - STEP_TIMESTAMP=$(date +%s)
   {{ else }}
-- $STEP_TIMESTAMP=[int](Get-Date -UFormat %s -Millisecond 0)
+  - $STEP_TIMESTAMP=[int](Get-Date -UFormat %s -Millisecond 0)
   {{ end }}
-- write-output {{ $.resultResource }} "timestamp=$STEP_TIMESTAMP"
-  {{ end }}
+  - write-output {{ $.resultResource }} "timestamp=$STEP_TIMESTAMP"
+{{ end }}
 
 # code quality step
 {{ define "step.codeAnalysis.onExecute" }}
