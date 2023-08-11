@@ -2,7 +2,7 @@
 metadata:
 
   # [Required] An unique ID used across template to identify resources and pipelines uniquely
-  templateID:  &tempId 'myApp'
+  templateID:  'myApp'
 
   # [Optional] If not provided latest go version will be picked
   goVersion: "1.20.4"
@@ -75,7 +75,7 @@ configurations:
         - 'go test ./...'
         - 'go mod download'
         - 'go mod tidy'
-        - 'go build -o '*tempId
+        - 'go build -o myApp'
         - 'curl -fL https://install-cli.jfrog.io | sh'
         - 'jf build-publish ${JFROG_CLI_BUILD_NAME} ${JFROG_CLI_BUILD_NUMBER}'
 
