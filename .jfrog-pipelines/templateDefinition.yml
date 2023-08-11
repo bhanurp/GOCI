@@ -163,7 +163,7 @@ resources:
     configuration:
       {{ template "res.gitRepo.config" . }}
     
-  - name: {{ $codeAnaResName }}
+  - name: {{ $codeAnalysisResName }}
     type: PropertyBag
     configuration:
       timestamp: ''
