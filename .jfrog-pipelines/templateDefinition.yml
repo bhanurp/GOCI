@@ -157,7 +157,7 @@ valuesFilePath: values.yml
 
 {{ define "step.shared.failure" }}
   {{ $ := . }}
-  - echo "step failed"
+            - echo "step failed"
 {{ end }}
 # -----------------------------------------------------------------------------------------
 
