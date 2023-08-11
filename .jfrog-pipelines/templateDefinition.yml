@@ -42,7 +42,6 @@ valuesFilePath: values.yml
 # Reusable templates
 # These are resolved using 'template' thus indentation is important
 # -----------------------------------------------------------------
-{{ $resultResources := dict "frogbotScanResName" $frogbotScanResName "$codeAnalysisResourceName" $codeAnalysisResourceName "buildInfoResultResName" $buildInfoResultResName }}
 {{ $templateParams := merge $resultResources (dict "values" .Values "gitResName" $gitResName "rootDirectory" $rootDirectory "buildTool" $buildTool "stepType" $stepType) }}
 
 # Git repo resource
