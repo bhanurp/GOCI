@@ -194,7 +194,7 @@ resources:
   {{ end }}
 
   {{ if $isWebhookTriggerEnabled }}
-  {{ - range $webhook := .Values.controls.triggerBy.incomingWebhooks }}
+  {{- range $webhook := .Values.controls.triggerBy.incomingWebhooks }}
   - name: "{{ $templateId }}_webhook_{{ $webhook.webhookName }}"
     type: IncomingWebhook
     configuration:
@@ -239,7 +239,7 @@ pipelines:
           inputResources:
             # Enable trigger options via external resources
               {{ if $isExternalTriggerAvailable }}
-              {{ - range $resource := .Values.controls.triggerBy.externalResources }}
+              {{- range $resource := .Values.controls.triggerBy.externalResources }}
               - name: '{{ $resource.resourceName }}'
               {{ - end }}
               {{ end }}
@@ -251,7 +251,7 @@ pipelines:
 
               # Enable incoming webhook triggers
               {{ if $isWebhookTriggerEnabled }}
-              {{ - range $webhook := .Values.controls.triggerBy.incomingWebhooks }}
+              {{- range $webhook := .Values.controls.triggerBy.incomingWebhooks }}
               - name: "{{ $templateId }}_webhook_{{ $webhook.webhookName }}"
               {{ end }}
               {{ end }}
