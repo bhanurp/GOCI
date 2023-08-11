@@ -15,6 +15,7 @@ valuesFilePath: values.yml
 {{ $codeAnalysisResourceName := print $templateId "_code_quality_result" }}
 {{ $buildInfoResultResName := print $templateId "_build_result" }}
 {{ $xrayScanOutputResource := print $templateId "_xray_result" }}
+{{ $automationResultResName := print $templateId "_automation_result" }}
 {{ $buildInfoResName := print $templateId "_build_info" }}
 {{ $cronResName := print $templateId "_cron" }}
 {{ $pipelineName := print $templateId "_build" }}
