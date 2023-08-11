@@ -261,6 +261,19 @@ pipelines:
         execution:
           onExecute:
             - end_step success
+      - name: code_analysis
+        type: {{ $stepType }}
+        configuration:
+          inputSteps:
+            - name: trigger_all
+          inputResources:
+            - name: {{ $gitResName }}
+              trigger: {{ $isGitTriggerEnabled }}
+          outputResources:
+            - name: {{ $codeAnalysisResourceName }}
+        execution:
+          onExecute:
+            {{ template "step.codeAnalysis.onExecute" $templateParams }}
           onFailure:
             {{ template "step.shared.failure" $templateParams }}
       - name: lint
