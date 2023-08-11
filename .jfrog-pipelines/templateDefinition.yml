@@ -46,21 +46,6 @@ valuesFilePath: values.yml
 {{ $resultResources := dict "$codeAnalysisResourceName" $codeAnalysisResourceName "buildInfoResultResName" $buildInfoResultResName }}
 {{ $templateParams := merge $resultResources (dict "values" .Values "gitResName" $gitResName "rootDirectory" $rootDirectory "stepType" $stepType) }}
 
-# Git repo resource
-{{ define "res.gitRepo.config" }}
-{{ range $key, $value := .Values.inputs.sourceRepository }}
-{{ $isObject := or (eq $key "files") (eq $key "branches") (eq $key "pullRequestSourceBranches") (eq $key "pullRequestTargetBranches") (eq $key "tags") (eq $key "buildOn") (eq $key "cancelPendingRunsOn") (eq $key "pin") }}
-{{ if (eq $isObject false )}}
-{{ $key }}: {{ $value }}
-{{ else }}
-{{ $key }}:
-{{ range $depthKey, $depthValue := $value }}
-{{ $depthKey }}: {{ $depthValue }}
-{{ end }}
-{{ end }}
-{{ end }}
-{{ end }}
-
 {{ $isControlsAvailable := default false .Values.controls }}
 {{ $isTriggerByAvailable := default false (and $isControlsAvailable .Values.controls.triggerBy) }}
 {{ $isGitTriggerEnabled := default false (and $isTriggerByAvailable (eq .Values.controls.triggerBy.sourceRepository true)) }}
