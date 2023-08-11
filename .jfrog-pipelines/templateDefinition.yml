@@ -63,6 +63,7 @@ valuesFilePath: values.yml
     {{- range $cmd := $.conf.commands }}
     - {{ $cmd }}
     {{- end }}
+    {{ end }}
 {{ end }}
 
 # Update current timestamp in result resource
