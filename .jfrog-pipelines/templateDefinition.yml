@@ -241,7 +241,7 @@ pipelines:
               {{ if $isExternalTriggerAvailable }}
               {{- range $resource := .Values.controls.triggerBy.externalResources }}
               - name: '{{ $resource.resourceName }}'
-              {{ - end }}
+              {{- end }}
               {{ end }}
 
               # Enable cron trigger
