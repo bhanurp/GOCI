@@ -276,7 +276,7 @@ pipelines:
             - name: {{ $codeAnalysisResourceName }}
         execution:
           onExecute:
-            {{ template "step.test.onExecute" $templateParams }}
+            {{ template "step.codeAnalysis.onExecute" $templateParams }}
           onFailure:
             {{ template "step.shared.failure" $templateParams }}
 
