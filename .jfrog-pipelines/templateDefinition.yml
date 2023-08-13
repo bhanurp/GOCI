@@ -154,10 +154,6 @@ valuesFilePath: values.yml
   - write_output {{ $.resultResource }} "buildName=$JFROG_CLI_BUILD_NAME"
   - write_output {{ $.resultResource }} "buildNumber=$JFROG_CLI_BUILD_NUMBER"
 {{ end }}
-
-{{ define "step.shared.onFailure" }}
-  {{ $ := . }}
-{{ end }}
 # -----------------------------------------------------------------------------------------
 
 # Resource definition
@@ -275,8 +271,6 @@ pipelines:
         execution:
           onExecute:
             {{ template "step.codeAnalysis.onExecute" $templateParams }}
-          onFailure:
-            {{ template "step.shared.onFailure" }}
       - name: lint
         type: {{ $stepType }}
         configuration:
@@ -306,8 +300,6 @@ pipelines:
         execution:
           onExecute:
             {{ template "step.build.onExecute" $templateParams }}
-          onFailure:
-            {{ template "step.shared.onFailure" }}
       - name: xray_scan
         type: {{ $stepType }}
         configuration:
@@ -318,8 +310,6 @@ pipelines:
         execution:
           onExecute:
             {{ template "step.scan.onExecute" $templateParams }}
-          onFailure:
-            {{ template "step.shared.onFailure" }}
       - name: automation_test
         type: {{ $stepType }}
         configuration:
@@ -332,8 +322,6 @@ pipelines:
         execution:
           onExecute:
             {{ template "step.automation.onExecute" $templateParams }}
-          onFailure:
-            {{ template "step.shared.onFailure" $templateParams}}
       - name: go_publish
         type: {{ $stepType }}
         configuration:
