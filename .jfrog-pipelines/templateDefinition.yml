@@ -155,9 +155,8 @@ valuesFilePath: values.yml
   - write_output {{ $.resultResource }} "buildNumber=$JFROG_CLI_BUILD_NUMBER"
 {{ end }}
 
-{{ define "step.shared.failure" }}
+{{ define "step.shared.onFailure" }}
   {{ $ := . }}
-  - end_step failure
 {{ end }}
 # -----------------------------------------------------------------------------------------
 
@@ -277,7 +276,7 @@ pipelines:
           onExecute:
             {{ template "step.codeAnalysis.onExecute" $templateParams }}
           onFailure:
-            {{ template "step.shared.failure" }}
+            {{ template "step.shared.onFailure" }}
       - name: lint
         type: {{ $stepType }}
         configuration:
@@ -292,7 +291,7 @@ pipelines:
           onExecute:
             {{ template "step.lint.onExecute" $templateParams }}
           onFailure:
-            {{ template "step.shared.failure" }}
+            {{ template "step.shared.onFailure" }}
       - name: go_build
         type: {{ $stepType }}
         configuration:
@@ -308,7 +307,7 @@ pipelines:
           onExecute:
             {{ template "step.build.onExecute" $templateParams }}
           onFailure:
-            {{ template "step.shared.failure" }}
+            {{ template "step.shared.onFailure" }}
       - name: xray_scan
         type: {{ $stepType }}
         configuration:
@@ -320,7 +319,7 @@ pipelines:
           onExecute:
             {{ template "step.scan.onExecute" $templateParams }}
           onFailure:
-            {{ template "step.shared.failure" }}
+            {{ template "step.shared.onFailure" }}
       - name: automation_test
         type: {{ $stepType }}
         configuration:
@@ -334,7 +333,7 @@ pipelines:
           onExecute:
             {{ template "step.automation.onExecute" $templateParams }}
           onFailure:
-            {{ template "step.shared.failure" $templateParams}}
+            {{ template "step.shared.onFailure" $templateParams}}
       - name: go_publish
         type: {{ $stepType }}
         configuration:
