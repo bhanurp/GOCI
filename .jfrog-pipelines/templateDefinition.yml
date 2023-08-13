@@ -277,7 +277,7 @@ pipelines:
           onExecute:
             {{ template "step.codeAnalysis.onExecute" $templateParams }}
           onFailure:
-            {{ template "step.shared.failure" }}
+            {{ template "step.shared.failure" | nindent 6}}
       - name: lint
         type: {{ $stepType }}
         configuration:
