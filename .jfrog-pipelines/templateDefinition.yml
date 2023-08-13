@@ -284,8 +284,6 @@ pipelines:
         execution:
           onExecute:
             {{ template "step.lint.onExecute" $templateParams }}
-          onFailure:
-            {{ template "step.shared.onFailure" }}
       - name: go_build
         type: {{ $stepType }}
         configuration:
