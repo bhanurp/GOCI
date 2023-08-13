@@ -277,7 +277,7 @@ pipelines:
           onExecute:
             {{ template "step.codeAnalysis.onExecute" $templateParams }}
           onFailure:
-            {{ template "step.shared.failure" | nindent 6}}
+            {{ template "step.shared.failure" }}
       - name: lint
         type: {{ $stepType }}
         configuration:
@@ -292,7 +292,7 @@ pipelines:
           onExecute:
             {{ template "step.lint.onExecute" $templateParams }}
           onFailure:
-            {{ template "step.shared.failure" $templateParams }}
+            {{ template "step.shared.failure" }}
       - name: go_build
         type: {{ $stepType }}
         configuration:
@@ -308,7 +308,7 @@ pipelines:
           onExecute:
             {{ template "step.build.onExecute" $templateParams }}
           onFailure:
-            {{ template "step.shared.failure" $templateParams }}
+            {{ template "step.shared.failure" }}
       - name: xray_scan
         type: {{ $stepType }}
         configuration:
@@ -320,7 +320,7 @@ pipelines:
           onExecute:
             {{ template "step.scan.onExecute" $templateParams }}
           onFailure:
-            {{ template "step.shared.failure" $templateParams }}
+            {{ template "step.shared.failure" }}
       - name: automation_test
         type: {{ $stepType }}
         configuration:
