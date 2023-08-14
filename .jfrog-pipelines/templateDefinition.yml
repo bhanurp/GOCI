@@ -99,13 +99,13 @@ valuesFilePath: values.yml
   {{ $ := . }}
   {{ $ := set $ "conf" $.values.configurations.steps.scan }}
   {{ $ := set $ "resultResource" $.buildInfoResultResName }}
-  - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
-  {{ if eq $.stepType "windows" }}
-  - powershell "Start-Process -Wait -Verb RunAs powershell '-NoProfile iwr https://releases.jfrog.io/artifactory/jfrog-cli/v2-jf/[RELEASE]/jfrog-cli-windows-amd64/jf.exe -OutFile $env:SYSTEMROOT\system32\jf.exe'"; jf intro
-  {{ else }}
-  - curl -fL https://install-cli.jfrog.io | sh
-  {{ end }}
-  {{ template "step.shared.onExecute.command" $ }}
+            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
+            {{ if eq $.stepType "windows" }}
+            - powershell "Start-Process -Wait -Verb RunAs powershell '-NoProfile iwr https://releases.jfrog.io/artifactory/jfrog-cli/v2-jf/[RELEASE]/jfrog-cli-windows-amd64/jf.exe -OutFile $env:SYSTEMROOT\system32\jf.exe'"; jf intro
+            {{ else }}
+            - curl -fL https://install-cli.jfrog.io | sh
+            {{ end }}
+            {{ template "step.shared.onExecute.command" $ }}
 {{ end }}
 
 # build step
@@ -113,21 +113,21 @@ valuesFilePath: values.yml
   {{ $ := . }}
   {{ $ := set $ "conf" $.values.configurations.steps.build }}
   {{ $ := set $ "resultResource" $.buildInfoResultResName }}
-  {{ if eq $.stepType "windows" }}
-  - powershell "Start-Process -Wait -Verb RunAs powershell '-NoProfile iwr https://releases.jfrog.io/artifactory/jfrog-cli/v2-jf/[RELEASE]/jfrog-cli-windows-amd64/jf.exe -OutFile $env:SYSTEMROOT\system32\jf.exe'"; jf intro
-  {{ else }}
-  - curl -fL https://install-cli.jfrog.io | sh
-  {{ end }}
-  - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
-  {{ template "step.shared.onExecute.command" $ }}
+            {{ if eq $.stepType "windows" }}
+            - powershell "Start-Process -Wait -Verb RunAs powershell '-NoProfile iwr https://releases.jfrog.io/artifactory/jfrog-cli/v2-jf/[RELEASE]/jfrog-cli-windows-amd64/jf.exe -OutFile $env:SYSTEMROOT\system32\jf.exe'"; jf intro
+            {{ else }}
+            - curl -fL https://install-cli.jfrog.io | sh
+            {{ end }}
+            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
+            {{ template "step.shared.onExecute.command" $ }}
 {{ end }}
 
 # automation step
 {{ define "step.automation.onExecute" }}
   {{ $ := . }}
   {{ $ := set $ "conf" $.values.configurations.steps.automation }}
-  - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
-    {{ template "step.shared.onExecute.command" $ }}
+            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
+            {{ template "step.shared.onExecute.command" $ }}
 {{ end }}
 
 # publish step
@@ -135,15 +135,15 @@ valuesFilePath: values.yml
   {{ $ := . }}
   {{ $ := set $ "conf" $.values.configurations.steps.publish }}
   {{ $ := set $ "resultResource" $.buildInfoResultResName }}
-  - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
-  {{ if eq $.stepType "windows" }}
-  - powershell "Start-Process -Wait -Verb RunAs powershell '-NoProfile iwr https://releases.jfrog.io/artifactory/jfrog-cli/v2-jf/[RELEASE]/jfrog-cli-windows-amd64/jf.exe -OutFile $env:SYSTEMROOT\system32\jf.exe'"; jf intro
-  {{ else }}
-  - curl -fL https://install-cli.jfrog.io | sh
-  {{ end }}
-  {{ template "step.shared.onExecute.command" $ }}
-  - write_output {{ $.resultResource }} "buildName=$JFROG_CLI_BUILD_NAME"
-  - write_output {{ $.resultResource }} "buildNumber=$JFROG_CLI_BUILD_NUMBER"
+            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
+            {{ if eq $.stepType "windows" }}
+            - powershell "Start-Process -Wait -Verb RunAs powershell '-NoProfile iwr https://releases.jfrog.io/artifactory/jfrog-cli/v2-jf/[RELEASE]/jfrog-cli-windows-amd64/jf.exe -OutFile $env:SYSTEMROOT\system32\jf.exe'"; jf intro
+            {{ else }}
+            - curl -fL https://install-cli.jfrog.io | sh
+            {{ end }}
+            {{ template "step.shared.onExecute.command" $ }}
+            - write_output {{ $.resultResource }} "buildName=$JFROG_CLI_BUILD_NAME"
+            - write_output {{ $.resultResource }} "buildNumber=$JFROG_CLI_BUILD_NUMBER"
 {{ end }}
 # -----------------------------------------------------------------------------------------
 
@@ -291,7 +291,7 @@ pipelines:
             - name: {{ $buildInfoResultResName }}
         execution:
           onExecute:
-            {{ template "step.build.onExecute" $templateParams | nindent 6 }}
+            {{ template "step.build.onExecute" $templateParams }}
 
       - name: xray_scan
         type: {{ $stepType }}
