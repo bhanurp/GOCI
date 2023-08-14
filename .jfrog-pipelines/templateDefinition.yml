@@ -59,11 +59,11 @@ valuesFilePath: values.yml
 # Steps shared template
 {{ define "step.shared.onExecute.command" }}
   {{ $ := . }}
-    {{ if $.conf }}
-    {{- range $cmd := $.conf.commands }}
-    - {{ $cmd }}
-    {{- end }}
-    {{ end }}
+  {{ if $.conf }}
+  {{- range $cmd := $.conf.commands }}
+  - {{ $cmd }}
+  {{- end }}
+  {{ end }}
 {{ end }}
 
 # Update current timestamp in result resource
