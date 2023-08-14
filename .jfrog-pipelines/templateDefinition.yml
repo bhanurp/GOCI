@@ -76,15 +76,6 @@ valuesFilePath: values.yml
   - write-output {{ $.resultResource }} "timestamp=$STEP_TIMESTAMP"
 {{ end }}
 
-# code quality step
-{{ define "step.codeAnalysis.onExecute" }}
-  {{ $ := . }}
-  {{ $ := set $ "conf" $.values.configurations.steps.codeAnalysis }}
-  {{ $ := set $ "resultResource" $.codeAnalysisResName }}
-  - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
-  {{ template "step.shared.onExecute.command" $ }}
-{{ end }}
-
 # analysis
 {{ define "step.analysis.onExecute" }}
   {{ $ := . }}
@@ -270,7 +261,7 @@ pipelines:
             - name: {{ $codeAnalysisResourceName }}
         execution:
           onExecute:
-            {{ template "step.codeAnalysis.onExecute" $templateParams }}
+            {{ template "step.analysis.onExecute" $templateParams }}
       - name: lint
         type: {{ $stepType }}
         configuration:
