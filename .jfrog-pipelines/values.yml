@@ -51,8 +51,8 @@ configurations:
     lint:
 
       commands:
-        - 'go get -u golang.org/x/lint/golint'
-        - 'golint ./...'
+        - go get -u golang.org/x/lint/golint
+        - golint ./...
         # use any other linter suitable like revive
 
     # code analysis step

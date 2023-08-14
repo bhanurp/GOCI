@@ -243,7 +243,7 @@ pipelines:
               {{ if $isWebhookTriggerEnabled }}
               {{- range $webhook := .Values.controls.triggerBy.incomingWebhooks }}
               - name: "{{ $templateId }}_webhook_{{ $webhook.webhookName }}"
-              {{ end }}
+              {{- end }}
               {{ end }}
         {{ end }}
         execution:
