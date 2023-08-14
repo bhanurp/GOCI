@@ -338,6 +338,8 @@ pipelines:
             - name: xray_scan
           inputResources:
             - name: {{ $gitResName }}
+          integrations:
+            - name: {{ .Values.inputs.integrations.artifactory }}
         execution:
           onExecute:
             {{ template "step.publish.onExecute" $templateParams }}

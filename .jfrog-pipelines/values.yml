@@ -78,7 +78,6 @@ configurations:
       commands:
         - check_xray_available
         - jf --version
-        - use_jfrog_cli $rtIntegrationName
         - curl -fL https://install-cli.jfrog.io | sh
         - jf bs --fail=true $BuildName $BuildNumber
 
@@ -91,7 +90,6 @@ configurations:
     publish:
       commands:
         - jf --version
-        - use_jfrog_cli $rtIntegrationName
         - curl -fL https://install-cli.jfrog.io | sh
         - jf rt upload $tempStateLocation/* $targetRepository --build-name=$buildName --build-number=$buildNumber --flat=true --insecure-tls=$no_verify_ssl --fail-no-op=true --detailed-summary
 
