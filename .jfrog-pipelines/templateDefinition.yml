@@ -291,8 +291,7 @@ pipelines:
             - name: {{ $buildInfoResultResName }}
         execution:
           onExecute:
-            {{ . }}
-            {{ template "step.build.onExecute" $templateParams }}
+            {{ include "step.build.onExecute" $templateParams | nindent 6 }}
 
       - name: xray_scan
         type: {{ $stepType }}
@@ -303,7 +302,6 @@ pipelines:
             - name: {{ $xrayScanOutputResource }}
         execution:
           onExecute:
-            {{ . }}
             {{ template "step.scan.onExecute" $templateParams }}
 
       - name: automation_test
