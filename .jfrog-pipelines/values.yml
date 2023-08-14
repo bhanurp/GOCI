@@ -98,7 +98,7 @@ configurations:
 controls:
   # [Optional] Feature to control the pipeline trigger options, defaults to `sourceRepository`
   # Whole pipeline from frogbot-scan will be triggered
-  triggerBy: {{}}
+  triggerBy: 
 
   # Connected source Git repository change [Defaults to true]
   # sourceRepository: true
