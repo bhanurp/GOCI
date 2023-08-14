@@ -81,8 +81,8 @@ valuesFilePath: values.yml
   {{ $ := . }}
   {{ $ := set $ "conf" $.values.configurations.steps.analysis }}
   {{ $ := set $ "resultResource" $.buildInfoResultResName }}
-  - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
-  {{ template "step.shared.onExecute.command" $ }}
+            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
+            {{ template "step.shared.onExecute.command" $ }}
 {{ end }}
 
 # lint step
@@ -90,8 +90,8 @@ valuesFilePath: values.yml
   {{ $ := . }}
   {{ $ := set $ "conf" $.values.configurations.steps.lint }}
   {{ $ := set $ "resultResource" $.buildInfoResultResName }}
-  - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
-  {{ template "step.shared.onExecute.command" $ }}
+            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
+            {{ template "step.shared.onExecute.command" $ }}
 {{ end }}
 
 # scan step
@@ -262,7 +262,7 @@ pipelines:
             - name: {{ $codeAnalysisResourceName }}
         execution:
           onExecute:
-            - echo "test"
+            {{ template "step.analysis.onExecute" $templateParams }}
 
       - name: lint
         type: {{ $stepType }}
