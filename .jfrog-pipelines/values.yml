@@ -1,6 +1,5 @@
 # [Required]
 metadata:
-
   # [Required] An unique ID used across template to identify resources and pipelines uniquely
   templateID: myApp
 
@@ -10,13 +9,13 @@ metadata:
   # [Optional]
   os: linux
 
-  # [Optional] Defaults to Ubuntu18 with Java 17
+  # [Optional] Defaults to Ubuntu18 with go
   # Allows to configure custom runtime, support all the configuration properties under runtime.image.custom
   # Ref: https://jfrog.com/help/r/jfrog-pipelines-documentation/choosing-your-runtime-image
   #  runtime:
   #    registry: docker
   #    sourceRepository: apps-docker-local
-  #    name: test.mycompany.io/apps-docker-local/ci/builder-node14
+  #    name: test.jfrog.io/apps-docker-local/ci/builder-node14
   #    tag: 1.0.0
 
   # [Optional] If not provided then default nodePool configured in platform will be used
@@ -24,7 +23,6 @@ metadata:
 
 # [Required]
 inputs:
-
   # [Required] Configure Git repository where application code is present
   sourceRepository:
     # Support all the Git Resource configuration properties
@@ -36,20 +34,16 @@ inputs:
 
   # [Required]
   integrations:
-
     # [Required] Artifactory api key to configure Jfrog CLI
     artifactory: int_default_artifactory
 
 # [Required]
 configurations:
-
-  sourceDirectory: ''
+  sourceDirectory: ""
 
   steps:
-
     # performs go lint
     lint:
-
       commands:
         - go get -u golang.org/x/lint/golint
         - golint ./...
@@ -57,7 +51,6 @@ configurations:
 
     # code analysis step
     analysis:
-
       commands:
         - go vet ./...
         # installs static check and performs static check analysis on source code excludes tests
@@ -70,7 +63,6 @@ configurations:
 
     #  runs unit test cases, downloads dependencies, performs mod tidy, performs build publish
     build:
-
       commands:
         - go test ./...
         - go mod download
@@ -81,7 +73,6 @@ configurations:
 
     # does xray scan by checking if xray is available
     scan:
-
       commands:
         - check_xray_available
         - jf --version
@@ -103,7 +94,6 @@ configurations:
         - jf rt upload $tempStateLocation/* $targetRepository --build-name=$buildName --build-number=$buildNumber --flat=true --insecure-tls=$no_verify_ssl --fail-no-op=true --detailed-summary
 
 controls:
-
   # [Optional] Feature to control the pipeline trigger options, defaults to `sourceRepository`
   # Whole pipeline from frogbot-scan will be triggered
   triggerBy:
@@ -127,7 +117,7 @@ controls:
 # [Optional] Send updates of your pipeline status via below methods
 notifications:
   email:
-    integrationName: 'int_smtp'
+    integrationName: "int_smtp"
 
   slack:
-    integrationName: 'int_slack'
+    integrationName: "int_slack"
