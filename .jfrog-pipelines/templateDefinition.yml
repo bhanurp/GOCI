@@ -249,6 +249,7 @@ pipelines:
         execution:
           onExecute:
             - end_step success
+
       - name: code_analysis
         type: {{ $stepType }}
         configuration:
@@ -261,8 +262,8 @@ pipelines:
             - name: {{ $codeAnalysisResourceName }}
         execution:
           onExecute:
-            # {{ template "step.analysis.onExecute" $templateParams }}
-            - end_step success
+            {{ template "step.analysis.onExecute" $templateParams }}
+
       - name: lint
         type: {{ $stepType }}
         configuration:
@@ -276,6 +277,7 @@ pipelines:
         execution:
           onExecute:
             {{ template "step.lint.onExecute" $templateParams }}
+
       - name: go_build
         type: {{ $stepType }}
         configuration:
@@ -290,6 +292,7 @@ pipelines:
         execution:
           onExecute:
             {{ template "step.build.onExecute" $templateParams }}
+
       - name: xray_scan
         type: {{ $stepType }}
         configuration:
@@ -300,6 +303,7 @@ pipelines:
         execution:
           onExecute:
             {{ template "step.scan.onExecute" $templateParams }}
+
       - name: automation_test
         type: {{ $stepType }}
         configuration:
@@ -312,6 +316,7 @@ pipelines:
         execution:
           onExecute:
             {{ template "step.automation.onExecute" $templateParams }}
+
       - name: go_publish
         type: {{ $stepType }}
         configuration:
