@@ -5,7 +5,7 @@ metadata:
   templateID: myApp
 
   # [Optional] If not provided latest go version will be picked
-  goVersion: 1.20.4
+  goVersion: 1.18.0
 
   # [Optional]
   os: linux
