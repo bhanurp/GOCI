@@ -311,6 +311,8 @@ pipelines:
             - name: {{ $buildInfoResultResName }}
           outputResources:
             - name: {{ $xrayScanOutputResource }}
+          integrations:
+            - name: {{ .Values.inputs.integrations.artifactory }}
         execution:
           onExecute:
             {{ template "step.scan.onExecute" $templateParams }}
