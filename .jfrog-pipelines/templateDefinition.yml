@@ -95,7 +95,7 @@ valuesFilePath: values.yml
 {{ end }}
 
 # scan step
-{{- define "step.scan.onExecute" }}
+{{ define "step.scan.onExecute" }}
   {{ $ := . }}
   {{ $ := set $ "conf" $.values.configurations.steps.scan }}
   {{ $ := set $ "resultResource" $.buildInfoResultResName }}
@@ -106,10 +106,10 @@ valuesFilePath: values.yml
   - curl -fL https://install-cli.jfrog.io | sh
   {{ end }}
   {{ template "step.shared.onExecute.command" $ }}
-{{- end }}
+{{ end }}
 
 # build step
-{{- define "step.build.onExecute" }}
+{{ define "step.build.onExecute" }}
   {{ $ := . }}
   {{ $ := set $ "conf" $.values.configurations.steps.build }}
   {{ $ := set $ "resultResource" $.buildInfoResultResName }}
@@ -120,7 +120,7 @@ valuesFilePath: values.yml
   {{ end }}
   - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
   {{ template "step.shared.onExecute.command" $ }}
-{{- end }}
+{{ end }}
 
 # automation step
 {{ define "step.automation.onExecute" }}
@@ -291,7 +291,8 @@ pipelines:
             - name: {{ $buildInfoResultResName }}
         execution:
           onExecute:
-            {{- template "step.build.onExecute" $templateParams }}
+            {{ . }}
+            {{ template "step.build.onExecute" $templateParams }}
 
       - name: xray_scan
         type: {{ $stepType }}
@@ -302,7 +303,8 @@ pipelines:
             - name: {{ $xrayScanOutputResource }}
         execution:
           onExecute:
-            {{- template "step.scan.onExecute" $templateParams }}
+            {{ . }}
+            {{ template "step.scan.onExecute" $templateParams }}
 
       - name: automation_test
         type: {{ $stepType }}
