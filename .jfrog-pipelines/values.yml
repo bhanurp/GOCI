@@ -2,13 +2,13 @@
 metadata:
 
   # [Required] An unique ID used across template to identify resources and pipelines uniquely
-  templateID:  'myApp'
+  templateID: myApp
 
   # [Optional] If not provided latest go version will be picked
-  goVersion: "1.20.4"
+  goVersion: 1.20.4
 
   # [Optional]
-  os: "linux"
+  os: linux
 
   # [Optional] Defaults to Ubuntu18 with Java 17
   # Allows to configure custom runtime, support all the configuration properties under runtime.image.custom
