@@ -45,7 +45,7 @@ configurations:
     # performs go lint
     lint:
       commands:
-        - go get -u golang.org/x/lint/golint
+        - go install golang.org/x/lint/golint@latest
         - golint ./...
         # use any other linter suitable like revive
 
