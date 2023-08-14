@@ -31,6 +31,8 @@ inputs:
     gitProvider: gh_int_bhanu
     branches:
       include: main
+    buildOn:
+      commit: true
 
   # [Required]
   integrations:
