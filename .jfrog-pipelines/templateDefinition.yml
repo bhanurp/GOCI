@@ -8,7 +8,7 @@ valuesFilePath: values.yml
 
 # Template Variables Section
 # -----------------------------------------------------------------------------------------
-{{ $templateId := .Values.metadata.templateId }}
+{{ $templateId := .Values.metadata.templateID }}
 {{ $os := default "linux" .Values.metadata.os }}
 {{ $stepType := ternary "PowerShell" "Bash" (eq $os "windows") }}
 {{ $gitResName := print $templateId "_git_source" }}
