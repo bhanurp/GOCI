@@ -169,6 +169,16 @@ resources:
     configuration:
       timestamp: ''
 
+  - name: {{ $automationResultResName }}
+    type: PropertyBag
+    configuration:
+      timestamp: ''
+
+  - name: {{ $xrayScanOutputResource }}
+    type: PropertyBag
+    configuration:
+      timestamp: ''
+
   - name: {{ $buildInfoResName }}
     type: BuildInfo
     configuration:
