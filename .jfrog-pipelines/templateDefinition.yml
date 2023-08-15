@@ -302,6 +302,9 @@ pipelines:
               trigger: {{ $isGitTriggerEnabled }}
           outputResources:
             - name: {{ $buildInfoResultResName }}
+          environmentVariables:
+            readOnly:
+              appName: $appName
         execution:
           onExecute:
             {{ template "step.build.onExecute" $templateParams }}
@@ -342,6 +345,9 @@ pipelines:
             - name: {{ $gitResName }}
           integrations:
             - name: {{ .Values.inputs.integrations.artifactory }}
+          environmentVariables:
+            readOnly:
+              appName: $appName
         execution:
           onExecute:
             {{ if $isTargetRepoAvailable }}
