@@ -22,7 +22,7 @@ valuesFilePath: values.yml
 {{ $unitTestResName := print $templateId "unit_test_build" }}
 {{ $appName := print $templateId }}
 {{ $rootDirectory := ternary (print "/" .Values.configurations.sourceDirectory) "" (not (eq "" .Values.configurations.sourceDirectory)) }}
-{{ $isTargetRepoAvailable := default false (and $isTargetRepoAvailable .Values.configurations.targetRepository) }}
+{{ $isTargetRepoAvailable := default false (and .Values.configurations .Values.configurations.targetRepository) }}
 
 # Git repo resource
 {{ define "res.gitRepo.config" }}
