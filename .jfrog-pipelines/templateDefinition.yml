@@ -20,7 +20,9 @@ valuesFilePath: values.yml
 {{ $cronResName := print $templateId "_cron" }}
 {{ $pipelineName := print $templateId "_build" }}
 {{ $unitTestResName := print $templateId "unit_test_build" }}
+{{ $appName := print $templateId }}
 {{ $rootDirectory := ternary (print "/" .Values.configurations.sourceDirectory) "" (not (eq "" .Values.configurations.sourceDirectory)) }}
+{{ $isTargetRepoAvailable := default false (and $isTargetRepoAvailable .Values.configurations.targetRepository) }}
 
 # Git repo resource
 {{ define "res.gitRepo.config" }}
@@ -342,7 +344,9 @@ pipelines:
             - name: {{ .Values.inputs.integrations.artifactory }}
         execution:
           onExecute:
+            {{ if $isTargetRepoAvailable }}
             {{ template "step.publish.onExecute" $templateParams }}
+            {{ end }}
           onComplete:
             {{ if $isSlackNotificationsAvailable }}
             - send_notification  {{ .Values.notifications.slack.integrationName }} --text "Successful Pipeline - $pipeline_name | Step - $step_name \n Committer - <$committer> \n Commit - $res_auto_gitRepo_commitSha $res_auto_gitRepo_commitMessage \n Branch - $res_auto_gitRepo_branchName \n URL - $step_url"
