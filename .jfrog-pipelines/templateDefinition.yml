@@ -346,6 +346,9 @@ pipelines:
             - name: {{ .Values.inputs.integrations.artifactory }}
           environmentVariables:
             appName: {{ $appName }}
+            {{ if $isTargetRepoAvailable }}
+            targetRepository: {{ .Values.configurations.targetRepository }}
+            {{ end }}
         execution:
           onExecute:
             {{ if $isTargetRepoAvailable }}
