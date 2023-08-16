@@ -342,6 +342,8 @@ pipelines:
             - name: xray_scan
           inputResources:
             - name: {{ $gitResName }}
+          outputResources:
+            - name: {{ $buildInfoResName }}
           integrations:
             - name: {{ .Values.inputs.integrations.artifactory }}
           environmentVariables:
