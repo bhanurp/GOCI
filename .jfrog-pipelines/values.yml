@@ -95,7 +95,8 @@ configurations:
         - jf --version
         - curl -fL https://install-cli.jfrog.io | sh
         - restore_run_files appBinary $appName
-        - jf rt upload $step_tmp_dir/$appName $targetRepository --build-name=$buildName --build-number=$buildNumber --flat=true --fail-no-op=true --detailed-summary
+        - ls
+        - jf rt upload $appName $targetRepository --build-name=$buildName --build-number=$buildNumber --flat=true --fail-no-op=true --detailed-summary
 
 controls:
   # [Optional] Feature to control the pipeline trigger options, defaults to `sourceRepository`
