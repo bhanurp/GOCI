@@ -303,8 +303,7 @@ pipelines:
           outputResources:
             - name: {{ $buildInfoResultResName }}
           environmentVariables:
-            readOnly:
-              appName: {{ $appName }}
+            appName: {{ $appName }}
         execution:
           onExecute:
             {{ template "step.build.onExecute" $templateParams }}
@@ -346,8 +345,7 @@ pipelines:
           integrations:
             - name: {{ .Values.inputs.integrations.artifactory }}
           environmentVariables:
-            readOnly:
-              appName: {{ $appName }}
+            appName: {{ $appName }}
         execution:
           onExecute:
             {{ if $isTargetRepoAvailable }}
