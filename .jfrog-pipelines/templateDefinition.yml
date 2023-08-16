@@ -16,7 +16,7 @@ valuesFilePath: values.yml
 {{ $buildInfoResultResName := print $templateId "_build_result" }}
 {{ $xrayScanOutputResource := print $templateId "_xray_result" }}
 {{ $automationResultResName := print $templateId "_automation_result" }}
-{{ $buildInfoResName := print $templateId "_build_info" }}
+{{ $buildInfoGoPublish := print $templateId "_build_info" }}
 {{ $cronResName := print $templateId "_cron" }}
 {{ $pipelineName := print $templateId "_build" }}
 {{ $unitTestResName := print $templateId "unit_test_build" }}
@@ -136,7 +136,7 @@ valuesFilePath: values.yml
 {{ define "step.publish.onExecute" }}
   {{ $ := . }}
   {{ $ := set $ "conf" $.values.configurations.steps.publish }}
-  {{ $ := set $ "resultResource" $.buildInfoResultResName }}
+  {{ $ := set $ "resultResource" $.buildInfoGoPublish }}
             - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
             {{ if eq $.stepType "windows" }}
             - powershell "Start-Process -Wait -Verb RunAs powershell '-NoProfile iwr https://releases.jfrog.io/artifactory/jfrog-cli/v2-jf/[RELEASE]/jfrog-cli-windows-amd64/jf.exe -OutFile $env:SYSTEMROOT\system32\jf.exe'"; jf intro
@@ -181,7 +181,7 @@ resources:
     configuration:
       timestamp: ''
 
-  - name: {{ $buildInfoResName }}
+  - name: {{ $buildInfoGoPublish }}
     type: BuildInfo
     configuration:
       sourceArtifactory: {{ .Values.inputs.integrations.artifactory }}
@@ -343,7 +343,7 @@ pipelines:
           inputResources:
             - name: {{ $gitResName }}
           outputResources:
-            - name: {{ $buildInfoResName }}
+            - name: {{ $buildInfoGoPublish}}
           integrations:
             - name: {{ .Values.inputs.integrations.artifactory }}
           environmentVariables:
