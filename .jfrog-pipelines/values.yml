@@ -93,7 +93,7 @@ configurations:
       commands:
         - jf --version
         - curl -fL https://install-cli.jfrog.io | sh
-        - jf rt upload $targetRepository $appName --build-name=$buildName --build-number=$buildNumber --flat=true --insecure-tls=$no_verify_ssl --fail-no-op=true --detailed-summary
+        - jf rt upload $appName $targetRepository --build-name=$buildName --build-number=$buildNumber --flat=true --fail-no-op=true --detailed-summary
 
 controls:
   # [Optional] Feature to control the pipeline trigger options, defaults to `sourceRepository`
