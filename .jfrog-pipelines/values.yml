@@ -71,7 +71,8 @@ configurations:
         - go test ./...
         - go mod download
         - go mod tidy
-        - go build -o $step_tmp_dir/$appName
+        - go build -o $appName
+        - add_run_files $appName appBinary
         - curl -fL https://install-cli.jfrog.io | sh
         - jf rt build-publish ${JFROG_CLI_BUILD_NAME} ${JFROG_CLI_BUILD_NUMBER}
 
@@ -93,6 +94,7 @@ configurations:
       commands:
         - jf --version
         - curl -fL https://install-cli.jfrog.io | sh
+        - add_run_files appBinary $appName
         - jf rt upload $step_tmp_dir/$appName $targetRepository --build-name=$buildName --build-number=$buildNumber --flat=true --fail-no-op=true --detailed-summary
 
 controls:
