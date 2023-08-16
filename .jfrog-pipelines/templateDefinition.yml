@@ -48,7 +48,7 @@ valuesFilePath: values.yml
 # Reusable templates
 # These are resolved using 'template' thus indentation is important
 # -----------------------------------------------------------------
-{{ $resultResources := dict "$codeAnalysisResourceName" $codeAnalysisResourceName "buildInfoResultResName" $buildInfoResultResName }}
+{{ $resultResources := dict "$codeAnalysisResourceName" $codeAnalysisResourceName "buildInfoResultResName" $buildInfoResultResName "buildInfoGoPublish" "$buildInfoGoPublish"}}
 {{ $templateParams := merge $resultResources (dict "values" .Values "gitResName" $gitResName "rootDirectory" $rootDirectory "stepType" $stepType) }}
 
 {{ $isControlsAvailable := default false .Values.controls }}
