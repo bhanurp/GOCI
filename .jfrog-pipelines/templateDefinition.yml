@@ -582,8 +582,16 @@ pipelines:
           environmentVariables:
             appName: {{ $appName }}
         execution:
+          onStart:
+            {{ template "step.build.onStart" $templateParams }}
           onExecute:
             {{ template "step.build.onExecute" $templateParams }}
+          onFailure:
+            {{ template "step.build.onFailure" $templateParams }}
+          onSuccess:
+            {{ template "step.build.onSuccess" $templateParams }}
+          onComplete:
+            {{ template "step.build.onComplete" $templateParams }}
       {{- end }}
 
       {{- if $isXrayScanEnabled }}
@@ -597,8 +605,16 @@ pipelines:
           integrations:
             - name: {{ .Values.inputs.integrations.artifactory }}
         execution:
+          onStart:
+            {{ template "step.scan.onStart" $templateParams }}
           onExecute:
             {{ template "step.scan.onExecute" $templateParams }}
+          onFailure:
+            {{ template "step.scan.onFailure" $templateParams }}
+          onSuccess:
+            {{ template "step.scan.onSuccess" $templateParams }}
+          onComplete:
+            {{ template "step.scan.onComplete" $templateParams }}
       {{- end }}
 
       {{- if $isAutomationEnabled }}
@@ -614,8 +630,16 @@ pipelines:
           outputResources:
             - name: {{ $automationResultResName }}
         execution:
+          onStart:
+            {{ template "step.automation.onStart" $templateParams }}
           onExecute:
             {{ template "step.automation.onExecute" $templateParams }}
+          onFailure:
+            {{ template "step.automation.onFailure" $templateParams }}
+          onSuccess:
+            {{ template "step.automation.onSuccess" $templateParams }}
+          onComplete:
+            {{ template "step.automation.onComplete" $templateParams }}
       {{- end }}
 
       {{- if $isPublishEnabled }}
@@ -641,10 +665,16 @@ pipelines:
             targetRepository: {{ .Values.configurations.targetRepository }}
             {{ end }}
         execution:
+           onStart:
+            {{ template "step.publish.onStart" $templateParams }}
           onExecute:
             {{ if $isTargetRepoAvailable }}
             {{ template "step.publish.onExecute" $templateParams }}
             {{ end }}
+          onFailure:
+            {{ template "step.publish.onFailure" $templateParams }}
+          onSuccess:
+            {{ template "step.publish.onSuccess" $templateParams }}
           onComplete:
             {{ if $isSlackNotificationsAvailable }}
             - send_notification  {{ .Values.notifications.slack.integrationName }} --text "Successful Pipeline - $pipeline_name | Step - $step_name \n Committer - <$committer> \n Commit - $res_auto_gitRepo_commitSha $res_auto_gitRepo_commitMessage \n Branch - $res_auto_gitRepo_branchName \n URL - $step_url"
