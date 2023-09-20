@@ -86,7 +86,7 @@ valuesFilePath: values.yml
 {{ end }}
 
 # Steps shared onFailure template
-{{ define "step.shared.onStart.command" }}
+{{ define "step.shared.onFailure.command" }}
   {{ $ := . }}
             {{ if $.conf }}
             {{- range $cmd := $.conf.commands.onFailure }}
@@ -96,7 +96,7 @@ valuesFilePath: values.yml
 {{ end }}
 
 # Steps shared onSuccess template
-{{ define "step.shared.onStart.command" }}
+{{ define "step.shared.onSuccess.command" }}
   {{ $ := . }}
             {{ if $.conf }}
             {{- range $cmd := $.conf.commands.onSuccess }}
@@ -106,7 +106,7 @@ valuesFilePath: values.yml
 {{ end }}
 
 # Steps shared onComplete template
-{{ define "step.shared.onStart.command" }}
+{{ define "step.shared.onComplete.command" }}
   {{ $ := . }}
             {{ if $.conf }}
             {{- range $cmd := $.conf.commands.onComplete }}
