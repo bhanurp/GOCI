@@ -125,6 +125,15 @@ valuesFilePath: values.yml
   - write_output {{ $.resultResource }} "timestamp=$STEP_TIMESTAMP"
 {{ end }}
 
+# codeQuality onStart
+{{ define "step.codeQuality.onStart" }}
+  {{ $ := . }}
+  {{ $ := set $ "conf" $.values.configurations.steps.codeQuality }}
+  {{ $ := set $ "resultResource" $.buildInfoResultResName }}
+            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
+            {{ template "step.shared.onStart.command" $ }}
+{{ end }}
+
 # codeQuality onExecute
 {{ define "step.codeQuality.onExecute" }}
   {{ $ := . }}
@@ -132,6 +141,33 @@ valuesFilePath: values.yml
   {{ $ := set $ "resultResource" $.buildInfoResultResName }}
             - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
             {{ template "step.shared.onExecute.command" $ }}
+{{ end }}
+
+# codeQuality onFailure
+{{ define "step.codeQuality.onFailure" }}
+  {{ $ := . }}
+  {{ $ := set $ "conf" $.values.configurations.steps.codeQuality }}
+  {{ $ := set $ "resultResource" $.buildInfoResultResName }}
+            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
+            {{ template "step.shared.onFailure.command" $ }}
+{{ end }}
+
+# codeQuality onSuccess
+{{ define "step.codeQuality.onSuccess" }}
+  {{ $ := . }}
+  {{ $ := set $ "conf" $.values.configurations.steps.codeQuality }}
+  {{ $ := set $ "resultResource" $.buildInfoResultResName }}
+            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
+            {{ template "step.shared.onSuccess.command" $ }}
+{{ end }}
+
+# codeQuality onComplete
+{{ define "step.codeQuality.onComplete" }}
+  {{ $ := . }}
+  {{ $ := set $ "conf" $.values.configurations.steps.codeQuality }}
+  {{ $ := set $ "resultResource" $.buildInfoResultResName }}
+            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
+            {{ template "step.shared.onComplete.command" $ }}
 {{ end }}
 
 # lint onStart
@@ -179,6 +215,15 @@ valuesFilePath: values.yml
             {{ template "step.shared.onComplete.command" $ }}
 {{ end }}
 
+# scan onStart
+{{ define "step.scan.onStart" }}
+  {{ $ := . }}
+  {{ $ := set $ "conf" $.values.configurations.steps.scan }}
+  {{ $ := set $ "resultResource" $.buildInfoResultResName }}
+            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
+            {{ template "step.shared.onStart.command" $ }}
+{{ end }}
+
 # scan step
 {{ define "step.scan.onExecute" }}
   {{ $ := . }}
@@ -191,6 +236,42 @@ valuesFilePath: values.yml
             - curl -fL https://install-cli.jfrog.io | sh
             {{ end }}
             {{ template "step.shared.onExecute.command" $ }}
+{{ end }}
+
+# scan onFailure
+{{ define "step.scan.onFailure" }}
+  {{ $ := . }}
+  {{ $ := set $ "conf" $.values.configurations.steps.scan }}
+  {{ $ := set $ "resultResource" $.buildInfoResultResName }}
+            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
+            {{ template "step.shared.onFailure.command" $ }}
+{{ end }}
+
+# scan onSuccess
+{{ define "step.scan.onSuccess" }}
+  {{ $ := . }}
+  {{ $ := set $ "conf" $.values.configurations.steps.scan }}
+  {{ $ := set $ "resultResource" $.buildInfoResultResName }}
+            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
+            {{ template "step.shared.onSuccess.command" $ }}
+{{ end }}
+
+# scan onComplete
+{{ define "step.scan.onComplete" }}
+  {{ $ := . }}
+  {{ $ := set $ "conf" $.values.configurations.steps.scan }}
+  {{ $ := set $ "resultResource" $.buildInfoResultResName }}
+            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
+            {{ template "step.shared.onComplete.command" $ }}
+{{ end }}
+
+# build onStart
+{{ define "step.build.onStart" }}
+  {{ $ := . }}
+  {{ $ := set $ "conf" $.values.configurations.steps.build }}
+  {{ $ := set $ "resultResource" $.buildInfoResultResName }}
+            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
+            {{ template "step.shared.onStart.command" $ }}
 {{ end }}
 
 # build step
@@ -207,12 +288,84 @@ valuesFilePath: values.yml
             {{ template "step.shared.onExecute.command" $ }}
 {{ end }}
 
+# build onFailure
+{{ define "step.build.onFailure" }}
+  {{ $ := . }}
+  {{ $ := set $ "conf" $.values.configurations.steps.build }}
+  {{ $ := set $ "resultResource" $.buildInfoResultResName }}
+            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
+            {{ template "step.shared.onFailure.command" $ }}
+{{ end }}
+
+# build onSuccess
+{{ define "step.build.onSuccess" }}
+  {{ $ := . }}
+  {{ $ := set $ "conf" $.values.configurations.steps.build }}
+  {{ $ := set $ "resultResource" $.buildInfoResultResName }}
+            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
+            {{ template "step.shared.onSuccess.command" $ }}
+{{ end }}
+
+# build onComplete
+{{ define "step.build.onComplete" }}
+  {{ $ := . }}
+  {{ $ := set $ "conf" $.values.configurations.steps.build }}
+  {{ $ := set $ "resultResource" $.buildInfoResultResName }}
+            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
+            {{ template "step.shared.onComplete.command" $ }}
+{{ end }}
+
+# automation onStart
+{{ define "step.automation.onStart" }}
+  {{ $ := . }}
+  {{ $ := set $ "conf" $.values.configurations.steps.automation }}
+  {{ $ := set $ "resultResource" $.buildInfoResultResName }}
+            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
+            {{ template "step.shared.onStart.command" $ }}
+{{ end }}
+
 # automation step
 {{ define "step.automation.onExecute" }}
   {{ $ := . }}
   {{ $ := set $ "conf" $.values.configurations.steps.automation }}
             - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
             {{ template "step.shared.onExecute.command" $ }}
+{{ end }}
+
+# automation onFailure
+{{ define "step.automation.onFailure" }}
+  {{ $ := . }}
+  {{ $ := set $ "conf" $.values.configurations.steps.automation }}
+  {{ $ := set $ "resultResource" $.buildInfoResultResName }}
+            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
+            {{ template "step.shared.onFailure.command" $ }}
+{{ end }}
+
+# automation onSuccess
+{{ define "step.automation.onSuccess" }}
+  {{ $ := . }}
+  {{ $ := set $ "conf" $.values.configurations.steps.automation }}
+  {{ $ := set $ "resultResource" $.buildInfoResultResName }}
+            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
+            {{ template "step.shared.onSuccess.command" $ }}
+{{ end }}
+
+# automation onComplete
+{{ define "step.automation.onComplete" }}
+  {{ $ := . }}
+  {{ $ := set $ "conf" $.values.configurations.steps.automation }}
+  {{ $ := set $ "resultResource" $.buildInfoResultResName }}
+            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
+            {{ template "step.shared.onComplete.command" $ }}
+{{ end }}
+
+# publish onStart
+{{ define "step.publish.onStart" }}
+  {{ $ := . }}
+  {{ $ := set $ "conf" $.values.configurations.steps.publish }}
+  {{ $ := set $ "resultResource" $.buildInfoResultResName }}
+            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
+            {{ template "step.shared.onStart.command" $ }}
 {{ end }}
 
 # publish step
@@ -229,6 +382,33 @@ valuesFilePath: values.yml
             {{ template "step.shared.onExecute.command" $ }}
             - write_output {{ $.resultResource }} "buildName=$JFROG_CLI_BUILD_NAME"
             - write_output {{ $.resultResource }} "buildNumber=$JFROG_CLI_BUILD_NUMBER"
+{{ end }}
+
+# publish onFailure
+{{ define "step.automation.onFailure" }}
+  {{ $ := . }}
+  {{ $ := set $ "conf" $.values.configurations.steps.publish }}
+  {{ $ := set $ "resultResource" $.buildInfoResultResName }}
+            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
+            {{ template "step.shared.onFailure.command" $ }}
+{{ end }}
+
+# publish onSuccess
+{{ define "step.publish.onSuccess" }}
+  {{ $ := . }}
+  {{ $ := set $ "conf" $.values.configurations.steps.publish }}
+  {{ $ := set $ "resultResource" $.buildInfoResultResName }}
+            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
+            {{ template "step.shared.onSuccess.command" $ }}
+{{ end }}
+
+# publish onComplete
+{{ define "step.publish.onComplete" }}
+  {{ $ := . }}
+  {{ $ := set $ "conf" $.values.configurations.steps.publish }}
+  {{ $ := set $ "resultResource" $.buildInfoResultResName }}
+            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
+            {{ template "step.shared.onComplete.command" $ }}
 {{ end }}
 # -----------------------------------------------------------------------------------------
 
