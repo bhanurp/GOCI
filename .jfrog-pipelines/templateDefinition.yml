@@ -162,7 +162,7 @@ valuesFilePath: values.yml
 {{ end }}
 
 # lint onSuccess
-{{ define "step.lint.onFailure" }}
+{{ define "step.lint.onSuccess" }}
   {{ $ := . }}
   {{ $ := set $ "conf" $.values.configurations.steps.lint }}
   {{ $ := set $ "resultResource" $.buildInfoResultResName }}
@@ -171,7 +171,7 @@ valuesFilePath: values.yml
 {{ end }}
 
 # lint onComplete
-{{ define "step.lint.onFailure" }}
+{{ define "step.lint.onComplete" }}
   {{ $ := . }}
   {{ $ := set $ "conf" $.values.configurations.steps.lint }}
   {{ $ := set $ "resultResource" $.buildInfoResultResName }}
