@@ -540,8 +540,16 @@ pipelines:
           outputResources:
             - name: {{ $codeQualityResourceName }}
         execution:
+          onStart:
+            {{ template "step.codeQuality.onStart" $templateParams }}
           onExecute:
             {{ template "step.codeQuality.onExecute" $templateParams }}
+          onFailure:
+            {{ template "step.codeQuality.onFailure" $templateParams }}
+          onSuccess:
+            {{ template "step.codeQuality.onSuccess" $templateParams }}
+          onComplete:
+            {{ template "step.codeQuality.onComplete" $templateParams }}
       {{- end }}
 
       {{- if $isLintEnabled }}
@@ -556,8 +564,16 @@ pipelines:
           outputResources:
             - name: {{ $codeQualityResourceName }}
         execution:
+          onStart:
+            {{ template "step.lint.onStart" $templateParams }}
           onExecute:
             {{ template "step.lint.onExecute" $templateParams }}
+          onFailure:
+            {{ template "step.lint.onFailure" $templateParams }}
+          onSuccess:
+            {{ template "step.lint.onSuccess" $templateParams }}
+          onComplete:
+            {{ template "step.lint.onComplete" $templateParams }}
       {{- end }}
 
       {{- if $isBuildEnabled }}
@@ -665,7 +681,7 @@ pipelines:
             targetRepository: {{ .Values.configurations.targetRepository }}
             {{ end }}
         execution:
-           onStart:
+          onStart:
             {{ template "step.publish.onStart" $templateParams }}
           onExecute:
             {{ if $isTargetRepoAvailable }}
