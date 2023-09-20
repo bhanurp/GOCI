@@ -12,7 +12,7 @@ valuesFilePath: values.yml
 {{ $os := default "linux" .Values.metadata.os }}
 {{ $stepType := ternary "PowerShell" "Bash" (eq $os "windows") }}
 {{ $gitResName := print $templateId "_git_source" }}
-{{ $codeAnalysisResourceName := print $templateId "_code_quality_result" }}
+{{ $codeQualityResourceName := print $templateId "_code_quality_result" }}
 {{ $buildInfoResultResName := print $templateId "_build_result" }}
 {{ $xrayScanOutputResource := print $templateId "_xray_result" }}
 {{ $automationResultResName := print $templateId "_automation_result" }}
@@ -23,6 +23,14 @@ valuesFilePath: values.yml
 {{ $appName := print $templateId }}
 {{ $rootDirectory := ternary (print "/" .Values.configurations.sourceDirectory) "" (not (eq "" .Values.configurations.sourceDirectory)) }}
 {{ $isTargetRepoAvailable := default false (and .Values.configurations .Values.configurations.targetRepository) }}
+
+# Steps optional settings
+{{- $isLintEnabled := default true .Values.configurations.steps.lint.enabled }}
+{{- $isQualityEnabled := default true .Values.configurations.steps.codeQuality.enabled }}
+{{- $isAutomationEnabled := default true .Values.configurations.steps.automation.enabled }}
+{{- $isBuildEnabled := default true .Values.configurations.steps.build.enabled }}
+{{- $isPublishEnabled := default true .Values.configurations.steps.publish.enabled }}
+{{- $isXrayScanEnabled := default true .Values.configurations.steps.xrayScan.enabled }}
 
 # Git repo resource
 {{ define "res.gitRepo.config" }}
@@ -48,7 +56,7 @@ valuesFilePath: values.yml
 # Reusable templates
 # These are resolved using 'template' thus indentation is important
 # -----------------------------------------------------------------
-{{ $resultResources := dict "$codeAnalysisResourceName" $codeAnalysisResourceName "buildInfoResultResName" $buildInfoResultResName "buildInfoGoPublish" $buildInfoGoPublish}}
+{{ $resultResources := dict "codeQualityResourceName" $codeQualityResourceName "buildInfoResultResName" $buildInfoResultResName "buildInfoGoPublish" $buildInfoGoPublish}}
 {{ $templateParams := merge $resultResources (dict "values" .Values "gitResName" $gitResName "rootDirectory" $rootDirectory "stepType" $stepType) }}
 
 {{ $isControlsAvailable := default false .Values.controls }}
@@ -78,10 +86,10 @@ valuesFilePath: values.yml
   - write_output {{ $.resultResource }} "timestamp=$STEP_TIMESTAMP"
 {{ end }}
 
-# analysis
-{{ define "step.analysis.onExecute" }}
+# codeQuality
+{{ define "step.codeQuality.onExecute" }}
   {{ $ := . }}
-  {{ $ := set $ "conf" $.values.configurations.steps.analysis }}
+  {{ $ := set $ "conf" $.values.configurations.steps.codeQuality }}
   {{ $ := set $ "resultResource" $.buildInfoResultResName }}
             - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
             {{ template "step.shared.onExecute.command" $ }}
@@ -156,7 +164,7 @@ resources:
     configuration:
       {{ template "res.gitRepo.config" . }}
     
-  - name: {{ $codeAnalysisResourceName }}
+  - name: {{ $codeQualityResourceName }}
     type: PropertyBag
     configuration:
       timestamp: ''
@@ -208,7 +216,9 @@ resources:
 pipelines:
   - name: {{ $pipelineName }}
     configuration:
-      jfrogCliVersion: 2
+      {{- if .Values.configurations.jfrogCliVersion }}
+      jfrogCliVersion: {{ .Values.configurations.jfrogCliVersion }}
+      {{- end }}
       runtime:
         type: image
         image:
@@ -263,7 +273,8 @@ pipelines:
           onExecute:
             - end_step success
 
-      - name: code_analysis
+      {{- if $isQualityEnabled }}
+      - name: code_quality
         type: {{ $stepType }}
         configuration:
           inputSteps:
@@ -272,11 +283,13 @@ pipelines:
             - name: {{ $gitResName }}
               trigger: {{ $isGitTriggerEnabled }}
           outputResources:
-            - name: {{ $codeAnalysisResourceName }}
+            - name: {{ $codeQualityResourceName }}
         execution:
           onExecute:
-            {{ template "step.analysis.onExecute" $templateParams }}
+            {{ template "step.codeQuality.onExecute" $templateParams }}
+      {{- end }}
 
+      {{- if $isLintEnabled }}
       - name: lint
         type: {{ $stepType }}
         configuration:
@@ -286,17 +299,26 @@ pipelines:
             - name: {{ $gitResName }}
               trigger: {{ $isGitTriggerEnabled }}
           outputResources:
-            - name: {{ $codeAnalysisResourceName }}
+            - name: {{ $codeQualityResourceName }}
         execution:
           onExecute:
             {{ template "step.lint.onExecute" $templateParams }}
+      {{- end }}
 
+      {{- if $isBuildEnabled }}
       - name: go_build
         type: {{ $stepType }}
         configuration:
           inputSteps:
-            - name: code_analysis
+          {{- if $isQualityEnabled }}
+            - name: code_quality
+          {{- end }}
+          {{- if $isLintEnabled }}
             - name: lint
+          {{- end }}
+          {{- if and (not $isLintEnabled) (not $isQualityEnabled) }}
+            - name: trigger_all
+          {{- end }}
           inputResources:
             - name: {{ $gitResName }}
               trigger: {{ $isGitTriggerEnabled }}
@@ -307,7 +329,9 @@ pipelines:
         execution:
           onExecute:
             {{ template "step.build.onExecute" $templateParams }}
+      {{- end }}
 
+      {{- if $isXrayScanEnabled }}
       - name: xray_scan
         type: {{ $stepType }}
         configuration:
@@ -320,12 +344,16 @@ pipelines:
         execution:
           onExecute:
             {{ template "step.scan.onExecute" $templateParams }}
+      {{- end }}
 
+      {{- if $isAutomationEnabled }}
       - name: automation_test
         type: {{ $stepType }}
         configuration:
           inputSteps:
+            {{- if $isBuildEnabled }}
             - name: go_build
+            {{- end }}
           inputResources:
             - name: {{ $gitResName }}
           outputResources:
@@ -333,13 +361,19 @@ pipelines:
         execution:
           onExecute:
             {{ template "step.automation.onExecute" $templateParams }}
+      {{- end }}
 
+      {{- if $isPublishEnabled }}
       - name: go_publish
         type: {{ $stepType }}
         configuration:
           inputSteps:
+             {{- if $isAutomationEnabled }}
             - name: automation_test
+            {{- end }}
+            {{- if $isXrayScanEnabled }}
             - name: xray_scan
+            {{- end }}
           inputResources:
             - name: {{ $gitResName }}
           outputResources:
@@ -360,3 +394,4 @@ pipelines:
             {{ if $isSlackNotificationsAvailable }}
             - send_notification  {{ .Values.notifications.slack.integrationName }} --text "Successful Pipeline - $pipeline_name | Step - $step_name \n Committer - <$committer> \n Commit - $res_auto_gitRepo_commitSha $res_auto_gitRepo_commitMessage \n Branch - $res_auto_gitRepo_branchName \n URL - $step_url"
             {{ end }}
+      {{- end }}

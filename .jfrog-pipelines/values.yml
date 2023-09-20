@@ -22,6 +22,21 @@ metadata:
   #  nodePool: some_nodepool
 
 # [Required]
+step:
+  lint:
+    enabled: true
+  codeQuality:
+    enabled: true
+  automation:
+    enabled: true
+  build:
+    enabled: true
+  publish:
+    enabled: true
+  xrayScan:
+    enabled: true
+
+# [Required]
 inputs:
   # [Required] Configure Git repository where application code is present
   sourceRepository:
@@ -44,17 +59,20 @@ configurations:
   sourceDirectory: ""
   # [Optional] Artifactory target repository to upload binary
   targetRepository: "go-local"
+  jfrogCliVersion: "2"
 
   steps:
     # performs go lint
     lint:
+      enabled: "true"
       commands:
         - go install golang.org/x/lint/golint@latest
         - golint ./...
         # use any other linter suitable like revive
 
-    # code analysis step
-    analysis:
+    # code Quality step
+    codeQuality:
+      enabled: "true"
       commands:
         - go vet ./...
         # installs static check and performs static check analysis on source code excludes tests
@@ -67,6 +85,7 @@ configurations:
 
     #  runs unit test cases, downloads dependencies, performs mod tidy, performs build publish
     build:
+      enabled: "true"
       commands:
         - go test ./...
         - go mod download
@@ -78,19 +97,22 @@ configurations:
 
     # does xray scan by checking if xray is available
     scan:
+      enabled: true
       commands:
         - check_xray_available
         - jf --version
         - curl -fL https://install-cli.jfrog.io | sh
-        - jf bs --fail=true $BuildName $BuildNumber
+        - jf bs --fail=true $BuildName $BuzildNumber
 
     # placeholder for running automation suite
     automation:
+      enabled: "true"
       commands:
         - end_step success
 
     # publish the build to artifactory
     publish:
+      enabled: "true"
       commands:
         - jf --version
         - curl -fL https://install-cli.jfrog.io | sh
