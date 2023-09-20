@@ -385,7 +385,7 @@ valuesFilePath: values.yml
 {{ end }}
 
 # publish onFailure
-{{ define "step.automation.onFailure" }}
+{{ define "step.publish.onFailure" }}
   {{ $ := . }}
   {{ $ := set $ "conf" $.values.configurations.steps.publish }}
   {{ $ := set $ "resultResource" $.buildInfoResultResName }}
