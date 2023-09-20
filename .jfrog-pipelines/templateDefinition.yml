@@ -8,19 +8,19 @@ valuesFilePath: values.yml
 
 # Template Variables Section
 # -----------------------------------------------------------------------------------------
-{{ $templateId := .Values.metadata.templateID }}
+{{ $serviceName := .Values.metadata.serviceName }}
 {{ $os := default "linux" .Values.metadata.os }}
 {{ $stepType := ternary "PowerShell" "Bash" (eq $os "windows") }}
-{{ $gitResName := print $templateId "_git_source" }}
-{{ $codeQualityResourceName := print $templateId "_code_quality_result" }}
-{{ $buildInfoResultResName := print $templateId "_build_result" }}
-{{ $xrayScanOutputResource := print $templateId "_xray_result" }}
-{{ $automationResultResName := print $templateId "_automation_result" }}
-{{ $buildInfoGoPublish := print $templateId "_build_info" }}
-{{ $cronResName := print $templateId "_cron" }}
-{{ $pipelineName := print $templateId "_build" }}
-{{ $unitTestResName := print $templateId "unit_test_build" }}
-{{ $appName := print $templateId }}
+{{ $gitResName := print $serviceName "_git_source" }}
+{{ $codeQualityResourceName := print $serviceName "_code_quality_result" }}
+{{ $buildInfoResultResName := print $serviceName "_build_result" }}
+{{ $xrayScanOutputResource := print $serviceName "_xray_result" }}
+{{ $automationResultResName := print $serviceName "_automation_result" }}
+{{ $buildInfoGoPublish := print $serviceName "_build_info" }}
+{{ $cronResName := print $serviceName "_cron" }}
+{{ $pipelineName := print $serviceName "_build" }}
+{{ $unitTestResName := print $serviceName "unit_test_build" }}
+{{ $appName := print $serviceName }}
 {{ $rootDirectory := ternary (print "/" .Values.configurations.sourceDirectory) "" (not (eq "" .Values.configurations.sourceDirectory)) }}
 {{ $isTargetRepoAvailable := default false (and .Values.configurations .Values.configurations.targetRepository) }}
 
@@ -30,7 +30,7 @@ valuesFilePath: values.yml
 {{- $isAutomationEnabled := default true .Values.configurations.steps.automation.enabled }}
 {{- $isBuildEnabled := default true .Values.configurations.steps.build.enabled }}
 {{- $isPublishEnabled := default true .Values.configurations.steps.publish.enabled }}
-{{- $isXrayScanEnabled := default true .Values.configurations.steps.xrayScan.enabled }}
+{{- $isXrayScanEnabled := default true .Values.configurations.steps.scan.enabled }}
 
 # Git repo resource
 {{ define "res.gitRepo.config" }}
@@ -65,12 +65,51 @@ valuesFilePath: values.yml
 {{ $isExternalTriggerAvailable := default false (and $isTriggerByAvailable .Values.controls.triggerBy.externalResources) }}
 {{ $isCronTriggerEnabled := default false (and $isTriggerByAvailable .Values.controls.triggerBy.cron (eq .Values.controls.triggerBy.cron.enabled true)) }}
 {{ $isWebhookTriggerEnabled := default false (and $isTriggerByAvailable .Values.controls.triggerBy.incomingWebhooks) }}
+# Steps shared onStart template
+{{ define "step.shared.onStart.command" }}
+  {{ $ := . }}
+            {{ if $.conf }}
+            {{- range $cmd := $.conf.commands.onStart }}
+            - {{ $cmd }}
+            {{- end }}
+            {{ end }}
+{{ end }}
 
-# Steps shared template
+# Steps shared onExecute template
 {{ define "step.shared.onExecute.command" }}
   {{ $ := . }}
             {{ if $.conf }}
-            {{- range $cmd := $.conf.commands }}
+            {{- range $cmd := $.conf.commands.onExecute }}
+            - {{ $cmd }}
+            {{- end }}
+            {{ end }}
+{{ end }}
+
+# Steps shared onFailure template
+{{ define "step.shared.onStart.command" }}
+  {{ $ := . }}
+            {{ if $.conf }}
+            {{- range $cmd := $.conf.commands.onFailure }}
+            - {{ $cmd }}
+            {{- end }}
+            {{ end }}
+{{ end }}
+
+# Steps shared onSuccess template
+{{ define "step.shared.onStart.command" }}
+  {{ $ := . }}
+            {{ if $.conf }}
+            {{- range $cmd := $.conf.commands.onSuccess }}
+            - {{ $cmd }}
+            {{- end }}
+            {{ end }}
+{{ end }}
+
+# Steps shared onComplete template
+{{ define "step.shared.onStart.command" }}
+  {{ $ := . }}
+            {{ if $.conf }}
+            {{- range $cmd := $.conf.commands.onComplete }}
             - {{ $cmd }}
             {{- end }}
             {{ end }}
@@ -86,7 +125,7 @@ valuesFilePath: values.yml
   - write_output {{ $.resultResource }} "timestamp=$STEP_TIMESTAMP"
 {{ end }}
 
-# codeQuality
+# codeQuality onExecute
 {{ define "step.codeQuality.onExecute" }}
   {{ $ := . }}
   {{ $ := set $ "conf" $.values.configurations.steps.codeQuality }}
@@ -95,13 +134,49 @@ valuesFilePath: values.yml
             {{ template "step.shared.onExecute.command" $ }}
 {{ end }}
 
-# lint step
+# lint onStart
+{{ define "step.lint.onStart " }}
+  {{ $ := . }}
+  {{ $ := set $ "conf" $.values.configurations.steps.lint }}
+  {{ $ := set $ "resultResource" $.buildInfoResultResName }}
+            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
+            {{ template "step.shared.onStart.command" $ }}
+{{ end }}
+
+# lint onExecute
 {{ define "step.lint.onExecute" }}
   {{ $ := . }}
   {{ $ := set $ "conf" $.values.configurations.steps.lint }}
   {{ $ := set $ "resultResource" $.buildInfoResultResName }}
             - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
             {{ template "step.shared.onExecute.command" $ }}
+{{ end }}
+
+# lint onFailure
+{{ define "step.lint.onFailure" }}
+  {{ $ := . }}
+  {{ $ := set $ "conf" $.values.configurations.steps.lint }}
+  {{ $ := set $ "resultResource" $.buildInfoResultResName }}
+            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
+            {{ template "step.shared.onFailure.command" $ }}
+{{ end }}
+
+# lint onSuccess
+{{ define "step.lint.onFailure" }}
+  {{ $ := . }}
+  {{ $ := set $ "conf" $.values.configurations.steps.lint }}
+  {{ $ := set $ "resultResource" $.buildInfoResultResName }}
+            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
+            {{ template "step.shared.onSuccess.command" $ }}
+{{ end }}
+
+# lint onComplete
+{{ define "step.lint.onFailure" }}
+  {{ $ := . }}
+  {{ $ := set $ "conf" $.values.configurations.steps.lint }}
+  {{ $ := set $ "resultResource" $.buildInfoResultResName }}
+            - cd ${res_{{ $.gitResName }}_resourcePath}{{ $.rootDirectory }}
+            {{ template "step.shared.onComplete.command" $ }}
 {{ end }}
 
 # scan step
@@ -205,7 +280,7 @@ resources:
 
   {{ if $isWebhookTriggerEnabled }}
   {{- range $webhook := .Values.controls.triggerBy.incomingWebhooks }}
-  - name: "{{ $templateId }}_webhook_{{ $webhook.webhookName }}"
+  - name: "{{ $serviceName }}_webhook_{{ $webhook.webhookName }}"
     type: IncomingWebhook
     configuration:
       webhookName: {{ $webhook.webhookName }}
@@ -265,7 +340,7 @@ pipelines:
               # Enable incoming webhook triggers
               {{ if $isWebhookTriggerEnabled }}
               {{- range $webhook := .Values.controls.triggerBy.incomingWebhooks }}
-              - name: "{{ $templateId }}_webhook_{{ $webhook.webhookName }}"
+              - name: "{{ $serviceName }}_webhook_{{ $webhook.webhookName }}"
               {{- end }}
               {{ end }}
         {{ end }}

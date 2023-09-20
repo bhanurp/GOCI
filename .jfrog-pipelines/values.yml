@@ -1,7 +1,7 @@
 # [Required]
 metadata:
   # [Required] An unique ID used across template to identify resources and pipelines uniquely
-  templateID: myApp
+  serviceName: myApp
 
   # [Optional] If not provided latest go version will be picked
   goVersion: 1.19.8
@@ -66,60 +66,74 @@ configurations:
     lint:
       enabled: "true"
       commands:
-        - go install golang.org/x/lint/golint@latest
-        - golint ./...
-        # use any other linter suitable like revive
+        onStart:
+          - echo "${step_name} started"
+        onExecute:
+          - go install golang.org/x/lint/golint@latest
+          - golint ./...
+          # use any other linter suitable like revive
+        onFailure:
+          - echo "${step_name} failed"
+        onSuccess:
+          - echo "${step_name} success"
+        onComplete:
+          - echo "${step_name} completed"
 
     # code Quality step
     codeQuality:
       enabled: "true"
       commands:
-        - go vet ./...
-        # installs static check and performs static check analysis on source code excludes tests
-        - go install honnef.co/go/tools/cmd/staticcheck@latest
-        - staticcheck -tests=false ./...
-        # installs gosec and performs go security checks
-        - go install github.com/securego/gosec/v2/cmd/gosec@latest
-        # exclude or include rules refer https://github.com/securego/gosec
-        - gosec ./...
+        onExecute:
+          - go vet ./...
+          # installs static check and performs static check analysis on source code excludes tests
+          - go install honnef.co/go/tools/cmd/staticcheck@latest
+          - staticcheck -tests=false ./...
+          # installs gosec and performs go security checks
+          - go install github.com/securego/gosec/v2/cmd/gosec@latest
+          # exclude or include rules refer https://github.com/securego/gosec
+          - gosec ./...
 
     #  runs unit test cases, downloads dependencies, performs mod tidy, performs build publish
     build:
       enabled: "true"
       commands:
-        - go test ./...
-        - go mod download
-        - go mod tidy
-        - go build -o $appName
-        - add_run_files $appName appBinary
-        - curl -fL https://install-cli.jfrog.io | sh
-        - jf rt build-publish ${JFROG_CLI_BUILD_NAME} ${JFROG_CLI_BUILD_NUMBER}
+        onExecute:
+          - go test ./...
+          - go mod download
+          - go mod tidy
+          - go build -o $appName
+          - add_run_files $appName appBinary
+          - curl -fL https://install-cli.jfrog.io | sh
+          - jf rt build-publish ${JFROG_CLI_BUILD_NAME} ${JFROG_CLI_BUILD_NUMBER}
 
     # does xray scan by checking if xray is available
     scan:
-      enabled: true
+      enabled: "false"
       commands:
-        - check_xray_available
-        - jf --version
-        - curl -fL https://install-cli.jfrog.io | sh
-        - jf bs --fail=true $BuildName $BuzildNumber
+        onExecute:
+          - check_xray_available
+          - jf --version
+          - curl -fL https://install-cli.jfrog.io | sh
+          - jf bs --fail=true $BuildName $BuzildNumber
 
     # placeholder for running automation suite
     automation:
       enabled: "true"
       commands:
-        - end_step success
+        onExecute:
+          - end_step success
 
     # publish the build to artifactory
     publish:
       enabled: "true"
       commands:
-        - jf --version
-        - curl -fL https://install-cli.jfrog.io | sh
-        - ls
-        - restore_run_files appBinary $appName
-        - ls
-        - jf rt upload $appName $targetRepository --build-name=$buildName --build-number=$buildNumber --flat=true --fail-no-op=true --detailed-summary
+        onExecute:
+          - jf --version
+          - curl -fL https://install-cli.jfrog.io | sh
+          - ls
+          - restore_run_files appBinary $appName
+          - ls
+          - jf rt upload $appName $targetRepository --build-name=$buildName --build-number=$buildNumber --flat=true --fail-no-op=true --detailed-summary
 
 controls:
   # [Optional] Feature to control the pipeline trigger options, defaults to `sourceRepository`
